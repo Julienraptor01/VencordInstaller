@@ -1,4 +1,4 @@
-$link = "https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe"
+$link = "https://github.com/Julienraptor01/VencordInstaller/releases/latest/download/VencordInstallerCli.exe"
 
 $outfile = "$env:TEMP\VencordInstallerCli.exe"
 
