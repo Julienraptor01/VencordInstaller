@@ -2,7 +2,7 @@ name: Submit to Winget Community Repo
 
 on:
   release:
-    types: [published]
+    types: published
   workflow_dispatch:
     inputs:
       tag:
@@ -12,32 +12,22 @@ on:
 
 jobs:
   winget:
-    name: Publish winget package
+    if: ${{ github.repository_owner == 'Vencord' }}
+    name: Publish winget package (${{ matrix.identifier == 'Vendicated.Vencord' && 'Stable' || matrix.identifier == 'Vendicated.Vencord.PTB' && 'PTB' || matrix.identifier == 'Vendicated.Vencord.Canary' && 'Canary' }})
     runs-on: windows-latest
+    strategy:
+      matrix:
+        identifier:
+          - Vendicated.Vencord
+          - Vendicated.Vencord.PTB
+          - Vendicated.Vencord.Canary
+
     steps:
-      - name: Submit package to Winget Community Repo (Stable)
-        uses: vedantmgoyal2009/winget-releaser@4614300d5812e5df91cb02ef0edbece623d5dea8
+      - name: Submit package to Winget Community Repo
+        uses: vedantmgoyal2009/winget-releaser@v2
         with:
-          identifier: Vendicated.Vencord
+          identifier: ${{ matrix.identifier }}
           token: ${{ secrets.WINGET_PAT }}
-          installers-regex: 'VencordInstallerCli\.exe'
-          release-tag: ${{ inputs.tag || github.event.release.tag_name }}
-          fork-user: shiggybot
-
-      - name: Submit package to Winget Community Repo (PTB)
-        uses: vedantmgoyal2009/winget-releaser@4614300d5812e5df91cb02ef0edbece623d5dea8
-        with:
-          identifier: Vendicated.Vencord.PTB
-          token: ${{ secrets.WINGET_PAT }}
-          installers-regex: 'VencordInstallerCli\.exe'
-          release-tag: ${{ inputs.tag || github.event.release.tag_name }}
-          fork-user: shiggybot
-
-      - name: Submit package to Winget Community Repo (Canary)
-        uses: vedantmgoyal2009/winget-releaser@4614300d5812e5df91cb02ef0edbece623d5dea8
-        with:
-          identifier: Vendicated.Vencord.Canary
-          token: ${{ secrets.WINGET_PAT }}
-          installers-regex: 'VencordInstallerCli\.exe'
+          installers-regex: 'VencordInstallerCli-Windows-x64\.exe'
           release-tag: ${{ inputs.tag || github.event.release.tag_name }}
           fork-user: shiggybot
